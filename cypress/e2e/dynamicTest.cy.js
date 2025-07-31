@@ -9,6 +9,11 @@ describe("MOPS Test Assistant - Dynamic Test Runner", () => {
     });
   });
 
+  // create beforeEach with cy.viewport 1920,1080
+  beforeEach(() => {
+    cy.viewport(1920, 1080);
+  });
+
   it("Runs tests from dynamic fixture", () => {
     cy.visit(testData.url);
 

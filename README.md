@@ -47,7 +47,7 @@ Follow these steps to run the MOPS Test Assistant locally.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/mops-test-assistant.git
+git clone https://github.com/leonredman/mops-test-assistant.git
 cd mops-test-assistant
 ```
 

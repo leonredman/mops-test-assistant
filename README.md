@@ -16,8 +16,8 @@ The MOPS Test Assistant is a QA automation tool that parses `.docx` files (copy 
 
 Use the included `.docx` files to run instant tests:
 
-- [`passing-example.docx`](./test-documents/passing-example.docx)
-- [`failing-example.docx`](./test-documents/failing-example.docx)
+- [`passing-example.docx`](./test-documents/passing-copydoc.docx)
+- [`failing-example.docx`](./test-documents/failing-copydoc.docx)
 
 ## Project Structure
 

@@ -1,0 +1,27 @@
+{
+  "url": "https://dazzling-kelpie-426d25.netlify.app/",
+  "docPreview": "Full Width Marquee\n\n  \n\nEyebrow: shoDaddy Broker Service  \n\nH1 Headline: Get the perfect domain — even if it's not available.  \n\nDescription: From startups to Fortune 100 companies, GoDaddy is the leading domain broker worldwide.\n\n\n\nJust $99.99 per domain, plus 20% commission^\n\n\n\nCTA Text: Get Start",
+  "tests": [
+    {
+      "type": "h1",
+      "selector": "[data-cy='headline']",
+      "expected": "Get the perfect domain — even if it's not available."
+    },
+    {
+      "type": "description",
+      "selector": "[data-cy='description']",
+      "expectedText": "From startups to Fortune 100 companies, GoDaddy is the leading domain broker worldwide."
+    },
+    {
+      "type": "cta",
+      "selector": "[data-cy='marquee-start'] a.cta-style",
+      "expectedText": "Get Started",
+      "expectedHref": "https://leonredman.com/sho-daddy"
+    },
+    {
+      "type": "component",
+      "selector": "[data-cy='card']",
+      "expectedCount": 3
+    }
+  ]
+}

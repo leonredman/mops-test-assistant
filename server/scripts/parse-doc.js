@@ -8,7 +8,50 @@ async function parseDoc(docPath, draftUrl) {
   const result = await mammoth.extractRawText({ path: docPath });
   const extractedText = result.value.trim();
 
-  // Define known modules and test cases for each
+  const matchedTests = [];
+
+  function extractValue(label, text) {
+    const regex = new RegExp(`${label}:\\s*(.+)`);
+    const match = text.match(regex);
+    return match ? match[1].trim() : null;
+  }
+
+  // Dynamically parse Full Width Marquee
+  if (extractedText.includes("Full Width Marquee")) {
+    console.log("Matched module: Full Width Marquee");
+
+    const h1 = extractValue("H1 Headline", extractedText);
+    const description = extractValue("Description", extractedText);
+    const ctaText = extractValue("CTA Text", extractedText);
+    const ctaUrl = extractValue("CTA URL", extractedText);
+
+    if (h1) {
+      matchedTests.push({
+        type: "h1",
+        selector: "[data-cy='headline']",
+        expected: h1,
+      });
+    }
+
+    if (description) {
+      matchedTests.push({
+        type: "description",
+        selector: "[data-cy='description']",
+        expectedText: description,
+      });
+    }
+
+    if (ctaText && ctaUrl) {
+      matchedTests.push({
+        type: "cta",
+        selector: "[data-cy='marquee-start'] a.cta-style",
+        expectedText: ctaText,
+        expectedHref: ctaUrl,
+      });
+    }
+  }
+
+  // Still allow static test definitions for other modules
   const moduleTestMap = {
     "Mega Marquee": [
       {
@@ -17,16 +60,16 @@ async function parseDoc(docPath, draftUrl) {
       },
       {
         type: "cta",
-        selector: "[data-cy='hero-cta']",
+        selector: "[data-cy='cta']",
         expectedText: "Get Started",
         expectedHref: "/pricing",
         requiredAttributes: ["data-eid"],
       },
     ],
-    "Feature Grid": [
+    "Multi Column Section": [
       {
         type: "component",
-        selector: "[data-cy='feature-card']",
+        selector: "[data-cy='card']",
         expectedCount: 3,
       },
     ],
@@ -38,28 +81,7 @@ async function parseDoc(docPath, draftUrl) {
         robots: "index,follow",
       },
     ],
-    "Full Width Marquee": [
-      {
-        type: "h1",
-        expected: "Bring your brand to life",
-      },
-      {
-        type: "description",
-        selector: "[data-cy='marquee-description']",
-        expectedText:
-          "Highlight your best features with bold imagery and messaging.",
-      },
-      {
-        type: "cta",
-        selector: "[data-cy='marquee-cta']",
-        expectedText: "Explore Plans",
-        expectedHref: "/plans",
-        requiredAttributes: ["data-eid"],
-      },
-    ],
   };
-
-  const matchedTests = [];
 
   for (const moduleName in moduleTestMap) {
     if (extractedText.includes(moduleName)) {
@@ -70,7 +92,7 @@ async function parseDoc(docPath, draftUrl) {
 
   const testFixture = {
     url: draftUrl,
-    docPreview: extractedText.slice(0, 300), // optional preview
+    docPreview: extractedText.slice(0, 300),
     tests: matchedTests,
   };
 

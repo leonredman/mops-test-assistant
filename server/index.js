@@ -1,62 +1,39 @@
-// server/index.js
 const express = require("express");
-const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
-const { exec } = require("child_process");
+const multer = require("multer");
 const parseDoc = require("./scripts/parse-doc");
 
 const app = express();
-const PORT = 3000;
+const port = 3000;
 
-// Middleware to serve static files (HTML form)
-app.use(express.static("public"));
+// Setup multer to store uploaded .docx files
+const upload = multer({ dest: path.join(__dirname, "uploads") });
+
+// Serve the frontend form from /public
+app.use(express.static(path.join(__dirname, "../public")));
 app.use(express.urlencoded({ extended: true }));
 
-// Set up multer for file uploads
-const storage = multer.diskStorage({
-  destination: "server/uploads/",
-  filename: (req, file, cb) => cb(null, "copydoc.docx"),
-});
-const upload = multer({ storage });
-
-// POST /run-tests
+// Route to handle form submission
 app.post("/run-tests", upload.single("copydoc"), async (req, res) => {
+  const uploadedDocPath = req.file.path;
   const draftUrl = req.body.draftUrl;
-  const filePath = path.resolve(__dirname, "uploads", "copydoc.docx");
+
+  console.log(`\nFile uploaded: ${uploadedDocPath}`);
+  console.log(`Draft URL: ${draftUrl}`);
 
   try {
-    // Step 1: Parse doc into fixture
-    await parseDoc(filePath, draftUrl); // saves fixture/auto-fixture.json
-
-    // Step 2: Run Cypress test
-    exec(
-      `npx cypress run --spec "server/cypress/e2e/dynamicTest.cy.js"`,
-      (err, stdout, stderr) => {
-        if (err) {
-          console.error("Cypress error:", stderr);
-          return res.status(500).send("Test run failed.");
-        }
-
-        // Step 3: Read simplified test output (can be improved later)
-        const resultPath = path.resolve(__dirname, "results", "result.json");
-        const results = fs.existsSync(resultPath)
-          ? JSON.parse(fs.readFileSync(resultPath))
-          : { status: "Ran, but no result.json yet." };
-
-        res.send(`
-          <h1>Test Results</h1>
-          <pre>${JSON.stringify(results, null, 2)}</pre>
-          <a href="/">Run Another Test</a>
-        `);
-      }
-    );
-  } catch (err) {
-    console.error("Server Error:", err);
-    res.status(500).send("Something went wrong.");
+    await parseDoc(uploadedDocPath, draftUrl); // THIS triggers your updated moduleTestMap
+    res.send(`
+      <h2>Test fixture generated successfully.</h2>
+      <p>You can now run Cypress tests.</p>
+      <a href="/">Run Another Test</a>
+    `);
+  } catch (error) {
+    console.error("Error during parsing:", error);
+    res.status(500).send("Failed to parse the document.");
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MOPS Test Assistant</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        padding: 2rem;
+        max-width: 800px;
+        margin: auto;
+      }
+
+      h1 {
+        color: #2c3e50;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 0.3rem;
+        margin-bottom: 1.5rem;
+      }
+
+      pre {
+        background-color: #fff;
+        padding: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      .section {
+        margin-bottom: 2rem;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background-color: #3498db;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 1rem;
+      }
+
+      .button:hover {
+        background-color: #2980b9;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        max-width: 100%;
+        padding: 0.5rem;
+        box-sizing: border-box;
+      }
+
+      code {
+        background: #eee;
+        padding: 2px 4px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <h1>MOPS Test Assistant</h1>
+
+      <form action="/run-tests" method="POST" enctype="multipart/form-data">
+        <label for="copydoc">Upload .docx Copy Doc:</label><br />
+        <input type="file" name="copydoc" accept=".docx" required /><br /><br />
+
+        <label for="draftUrl">Enter Draft URL:</label><br />
+        <input
+          type="text"
+          name="draftUrl"
+          placeholder="https://example.com/draft"
+          required
+        /><br /><br />
+
+        <button type="submit" class="button">Run Test</button>
+      </form>
+    </div>
+  </body>
+</html>

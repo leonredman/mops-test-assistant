@@ -1,14 +1,15 @@
 /// <reference types="cypress" />
 
-const fs = require("fs");
-const path = require("path");
-
-// Read the generated test fixture
-const fixturePath = path.resolve(__dirname, "../../fixtures/auto-fixture.json");
-const testData = JSON.parse(fs.readFileSync(fixturePath, "utf-8"));
-
 describe("MOPS Test Assistant - Dynamic Test Runner", () => {
-  it(`Runs tests for ${testData.url}`, () => {
+  let testData;
+
+  before(() => {
+    cy.task("loadFixtureFromServer").then((data) => {
+      testData = data;
+    });
+  });
+
+  it("Runs tests from dynamic fixture", () => {
     cy.visit(testData.url);
 
     testData.tests.forEach((test) => {

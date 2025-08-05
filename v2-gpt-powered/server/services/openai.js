@@ -44,7 +44,9 @@ ${text}
   const raw = response.choices[0].message.content;
 
   try {
-    return JSON.parse(raw);
+    // Remove markdown formatting if GPT wraps output in ```json ... ```
+    const clean = raw.replace(/```json|```/g, "").trim();
+    return JSON.parse(clean);
   } catch (err) {
     console.error("Failed to parse GPT response as JSON:", raw);
     throw new Error("Invalid JSON format returned from GPT.");
